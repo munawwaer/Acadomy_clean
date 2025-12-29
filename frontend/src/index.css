@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  /* -- تعريف ألوانك الخاصة هنا -- */
+
+  /* 1. الأزرق الكحلي (الأساسي - للثقة والرسمية) */
+  --color-navy: #102a43;
+  --color-navy-dark: #0a1c2e; /* للخلفيات الغامقة والقوائم */
+
+  /* 2. الذهبي (لأزرار الإجراءات والتميز) */
+  --color-gold: #c5a059;
+  --color-gold-light: #dfb870; /* عند مرور الماوس Hover */
+
+  /* 3. ألوان مساعدة */
+  --color-white: #ffffff;
+  --color-glass: rgba(255, 255, 255, 0.1); /* للكروت الزجاجية */
+  --color-gray-light: #f8fafc; /* خلفية الصفحات العامة */
+}
+
+/* --- إعدادات عامة للموقع --- */
+body {
+  background-color: var(--color-gray-light);
+  color: var(--color-navy);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  direction: rtl; /* لأن الموقع عربي */
+}
+
+/* شكل شريط التمرير (Scrollbar) ليناسب الفخامة */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-navy-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 4px;
+}

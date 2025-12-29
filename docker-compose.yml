@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # 1. قاعدة البيانات (كما هي)
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always  
+    environment:
+      - POSTGRES_DB=launchpad_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminpass
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "5050:80"
+    depends_on:
+      - db    
+  # 2. الباك اند (Django)
+  backend:
+    build: ./backend  # 👈 غيرنا المسار لأننا نقلنا الملفات
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=launchpad_db
+      - DB_USER=admin
+      - DB_PASSWORD=adminpass
+      - DB_HOST=db
+
+  # 3. الفرونت اند (React) - الإضافة الجديدة 🔥
+  frontend:
+    build: ./frontend     # يبني من مجلد الفرونت اند
+    volumes:
+      - ./frontend:/app   # 👈 ميزة Hot Reload (تعدل الكود يتحدث المتصفح فوراً)
+      - /app/node_modules # حماية مجلد المكتبات من المسح
+    ports:
+      - "5173:5173"       # نفتح بورت رياكت
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      # نحدد رابط الباك اند
+      - REACT_APP_API_URL=http://localhost:8000 
+    stdin_open: true      # ضروري جداً عشان رياكت ما يغلق فوراً
+    tty: true
+
+volumes:
+  postgres_data:
